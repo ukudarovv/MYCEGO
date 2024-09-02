@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File List</title>
+</head>
+<body>
+    <h1>File List</h1>
+    <form method="get">
+        <input type="text" name="public_key" placeholder="Enter public key" value="{{ request.GET.public_key }}">
+        <select name="filter_type">
+            <option value="">All Types</option>
+            {% for type in filter_type %}
+                <option value="{{ type }}">{{ type }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">View Files</button>
+    </form>
+
+    <form method="post" action="{% url 'download_selected_files' %}">
+        {% csrf_token %}
+        <ul>
+            {% for file in files %}
+                <li>
+                    <input type="checkbox" name="selected_files" value="{{ file.file }}">
+                    {{ file.name }} -
+                    <a href="{% url 'download_file' file.file %}" target="_blank">Download</a>
+                </li>
+            {% empty %}
+                <li>No files found</li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Download Selected</button>
+    </form>
+
+</body>
+</html>
