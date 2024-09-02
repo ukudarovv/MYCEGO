@@ -14,8 +14,7 @@ logger = logging.getLogger(__name__)
 
 def file_list(request):
     public_key = request.GET.get('public_key', '')
-    filter_type = request.GET.get('filter_type', '')
-    cache_key = f"file_list_{public_key}_{filter_type}"
+    cache_key = f"file_list_{public_key}"
     files = cache.get(cache_key)
 
     if not files:
@@ -28,15 +27,12 @@ def file_list(request):
                 data = response.json()
                 files = data.get('_embedded', {}).get('items', [])
 
-                if filter_type:
-                    files = [file for file in files if filter_type in file['mime_type']]
-
                 cache.set(cache_key, files, timeout=60*15)  # Cache for 15 minutes
             except requests.RequestException as e:
                 logger.error(f"Error fetching file list: {e}")
                 return HttpResponseBadRequest(f"Error fetching file list: {e}")
 
-    return render(request, 'diskviewer/file_list.html', {'files': files, 'filter_type': filter_type})
+    return render(request, 'diskviewer/file_list.html', {'files': files})
 
 def download_file(request, file_url):
     file_url = unquote(file_url)  # Decode URL if needed

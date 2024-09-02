@@ -8,12 +8,6 @@
     <h1>File List</h1>
     <form method="get">
         <input type="text" name="public_key" placeholder="Enter public key" value="{{ request.GET.public_key }}">
-        <select name="filter_type">
-            <option value="">All Types</option>
-            {% for type in filter_type %}
-                <option value="{{ type }}">{{ type }}</option>
-            {% endfor %}
-        </select>
         <button type="submit">View Files</button>
     </form>
 
@@ -32,6 +26,5 @@
         </ul>
         <button type="submit">Download Selected</button>
     </form>
-
 </body>
 </html>
